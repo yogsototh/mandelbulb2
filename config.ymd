@@ -1,0 +1,36 @@
+-----
+isHidden:       false
+menupriority:   1
+kind:           article
+created_at:     2012-06-15T19:16:43+02:00
+en: title: 3D Mandelbrot with OpenGL and Haskell (II)
+en: subtitle: Optimized Example
+fr: title: Mandelbrot en 3D avec OpenGL et Haskell
+fr: subtitle: Optimisations
+author_name: Yann Esposito
+author_uri: yannesposito.com
+tags:
+  - Haskell
+  - programming
+  - functional
+  - tutorial
+  - fractal
+-----
+blogimage("BenoitBMandelbrot.jpg","The B in Benoît B. Mandelbrot stand for Benoît B. Mandelbrot")
+
+begindiv(intro)
+
+en: %tldr A progressive Haskell example. 
+en: A Mandelbrot set extended in 3D, rendered using OpenGL and coded with Haskell.
+en: In the end the code will be very clean.
+en: The significant stuff will be in a pure functional bubble. 
+en: The display details will be put in an external module playing the role of a wrapper.
+en: Imperative language could also benefit from this functional organization.
+fr: %tlal Un exemple progressif d'utilisation d'Haskell.
+fr: Vous pourrez voir un ensemble de Mandelbrot étendu à la troisième dimension.
+fr: De plus le code sera très propre.
+fr: Les détails de rendu sont séparés dans un module externe.
+fr: Le code descriptif intéressant est concentré dans un environnement pur et fonctionnel.
+fr: Vous pouvez vous inspirer de ce code utilisant le paradigme fonctional dans tous les languages.
+
+

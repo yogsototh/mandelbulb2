@@ -1,0 +1,38 @@
+#!/usr/bin/env zsh
+
+webroot="$HOME/Sites/webroot"
+
+print -- "Search script"
+while [[ ! -x ./create_ymd.sh ]]; do 
+    [[ $PWD = "/" ]] && {
+        print -- "Error: can't find create_ymd.sh" >&2
+        exit 1
+    }
+    cd ..
+done
+
+print -- "Create article"
+./create_ymd.sh > $webroot/latest.ymd
+
+print -- "Copy source codes"
+ycp() {
+    local precedent=""
+    for e in $*;do
+        [[ $precedent != "" ]] && print -- "\t$precedent"
+        precedent=$e
+    done
+    cp $*
+}
+latestArticleDir=$(ls -l $webroot/latest.ymd | perl -pi -e 's#.*/##; s#.md$##')
+for langue in en fr; do
+    dst="$webroot/output/Scratch/$langue/blog/$latestArticleDir/code"
+    [[ ! -d $dst ]] && mkdir -p $dst
+    ycp *.lhs(N) $dst
+    for dir in ??_*(N/); do
+        [[ ! -d $dst/$dir ]] && mkdir $dst/$dir
+        ycp $dir/*.{lhs,hs}(.N) $dst/$dir
+    done
+done
+print -- "\nRecompile"
+cd $webroot
+./tasks/recompile
