@@ -125,7 +125,7 @@ Our initial world state is slightly changed:
 >  , scale = 1.0
 >  , box = Box3D { minPoint = makePoint3D (0-eps, 0-eps, 0-eps)
 >                , maxPoint = makePoint3D (0+eps, 0+eps, 0+eps)
->                , resolution =  0.3 }
+>                , resolution =  0.1 }
 >  , told = 0
 >  -- We declare cache directly this time
 >  , cache = objectFunctionFromWorld initialWorld
@@ -152,8 +152,12 @@ Then we update our world state accordingly.
 > resize r world = 
 >   tmpWorld { cache = objectFunctionFromWorld tmpWorld }
 >   where 
+>       newres = sqrt ((resolution (box world))**2 * r)
+>       eps3D = makePoint3D (30*newres,30*newres,30*newres)
 >       tmpWorld = world { box = (box world) {
->               resolution = sqrt ((resolution (box world))**2 * r) }}
+>                 minPoint = position world - eps3D
+>               , maxPoint = position world + eps3D
+>               , resolution = newres }}
 
 All the rest is exactly the same.
 
