@@ -74,46 +74,49 @@ type Scalar  = GLfloat
 -- | The time type (currently its Int)
 type Time = Int
 -- | A 3D Point mainly '(x,y,z)'
-data Point3D = P (Point,Point,Point) deriving (Eq,Show,Read)
+data Point3D = P {-# UNPACK #-} !Point
+                 {-# UNPACK #-} !Point
+                 {-# UNPACK #-} !Point 
+               deriving (Eq,Show,Read)
 type Color = Color3 Scalar
 
 -- Get x (resp. y, z) coordinate of a 3D point
 xpoint :: Point3D -> Point
-xpoint (P (x,_,_)) = x
+xpoint (P x _ _) = x
 ypoint :: Point3D -> Point
-ypoint (P (_,y,_)) = y
+ypoint (P _ y _) = y
 zpoint :: Point3D -> Point
-zpoint (P (_,_,z)) = z
+zpoint (P _ _ z) = z
 
 -- Create a Point3D element from a triplet
 makePoint3D :: (Point,Point,Point) -> Point3D
-makePoint3D = P
+makePoint3D (x,y,z) = P x y z
 
 -- Make Point3D an instance of Num
 instance Num Point3D where
-    (+) (P (ax,ay,az)) (P (bx,by,bz)) = P (ax+bx,ay+by,az+bz)
-    (-) (P (ax,ay,az)) (P (bx,by,bz)) = P (ax-bx,ay-by,az-bz)
-    (*) (P (ax,ay,az)) (P (bx,by,bz)) = P ( ay*bz - az*by
-                                , az*bx - ax*bz
-                                , ax*by - ay*bx )
-    abs (P (x,y,z)) = P (abs x,abs y, abs z)
-    signum (P (x,y,z)) = P (signum x, signum y, signum z)
-    fromInteger i = P (fromInteger i, 0, 0)
+    (+) (P ax ay az) (P bx by bz) = P (ax+bx) (ay+by) (az+bz)
+    (-) (P ax ay az) (P bx by bz) = P (ax-bx) (ay-by) (az-bz)
+    (*) (P ax ay az) (P bx by bz) = P (ay*bz - az*by)
+                                      (az*bx - ax*bz)
+                                      (ax*by - ay*bx)
+    abs (P x y z) = P (abs x) (abs y)  (abs z)
+    signum (P x y z) = P (signum x)  (signum y)  (signum z)
+    fromInteger i = P (fromInteger i)  0  0
 
 -- The scalar product
 infixr 5 -*<
 (-*<) :: Scalar -> Point3D -> Point3D
-(-*<) s p = P (s*xpoint p, s*ypoint p, s*zpoint p)
+(-*<) s p = P (s*xpoint p)  (s*ypoint p)  (s*zpoint p)
 
 -- Used internally to convert point3D to different types
 toGLVector3 :: Point3D -> Vector3 GLfloat
-toGLVector3 (P(x,y,z)) = Vector3 x y z
+toGLVector3 (P x y z) = Vector3 x y z
 
 toGLVertex3 :: Point3D -> Vertex3 GLfloat
-toGLVertex3 (P(x,y,z)) = Vertex3 x y z
+toGLVertex3 (P x y z) = Vertex3 x y z
 
 toGLNormal3 :: Point3D -> Normal3 GLfloat
-toGLNormal3 (P(x,y,z)) = Normal3 x y z
+toGLNormal3 (P x y z) = Normal3 x y z
 
 -- | The Box3D type represent a 3D bounding box
 -- | Note if minPoint = (x,y,z) and maxPoint = (x',y',z')
